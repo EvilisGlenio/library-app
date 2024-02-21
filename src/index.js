@@ -31,7 +31,28 @@ const resolvers = {
       return books.find((book) => book.id === id);
     },
   },
+  Mutation: {
+    create: (_, { id, title, author, publishedAt }) => {
+      const book = { id, title, author, publishedAt };
+      books.push(book);
+      return book;
+    },
+    delete: (_, { id }) => {
+      const filteredBooks = books.filter((book) => book.id !== id);
+      books = filteredBooks;
+      return true;
+    },
+    update: (_, { id, title, author, publishedAt }) => {
+      const book = books.find((book) => book.id === id);
+      book.id = book.id;
+      book.title = title ? title : book.title;
+      book.author = author ? author : book.author;
+      book.publishedAt = publishedAt ? publishedAt : book.publishedAt;
+      return book;
+    },
+  },
 };
 //CREATE SERVER
-
+const app = new ApolloServer({ typeDefs, resolvers });
 //RUN SERVER
+app.listen().then(({ url }) => console.log(`Server running on ${url}`));
